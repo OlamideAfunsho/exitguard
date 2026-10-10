@@ -1,0 +1,2 @@
+solders==0.29.0
+pytest>=8

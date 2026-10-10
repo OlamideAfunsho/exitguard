@@ -1,0 +1,10 @@
+.venv/
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+demo-out/
+.scratch/
+.env
+*.keypair.json

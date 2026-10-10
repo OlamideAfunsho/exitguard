@@ -1,0 +1,195 @@
+ExitGuard demo  -  offboarding one wallet from Squads v4 treasuries
+  chain     LiteSVM, local. Evidence from this run is labelled LOCAL_SIMULATION.
+  program   SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf, executable captured from mainnet at slot 455404828
+            ELF sha256 dec8d3e0fae58c7c8f2416e5f67c25e673f047afd6dd2bba4a47e0b29a01d34c
+
+[1] The organisation
+    Two treasuries created by sending real Squads instructions to the captured program.
+  treasury             multisig                                      threshold  members (I=initiate V=vote E=execute)
+  Operations treasury  FJsB29Jaef3mjZxDV67ikLwbAkxBZu6DfJxgcCc73FAY  2 of 3     ada (I+V+E), bayo (I+V+E), dana (I+V+E)
+  Grants treasury      D9QEm12tsY9EFhBCGmA22K2QJFnrk7kUzCLHow3QE6Cz  2 of 4     ada (I+V+E), bayo (I+V+E), dana (I+V), chidi (V+E)
+  dana (AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y) is leaving. That wallet also holds a 2 SOL/week spending limit on Operations.
+
+[2] What happens with member removal alone
+    A separate copy of the same organisation. The team removes dana as a member and stops there.
+    RemoveMember executed. dana in Operations members: no
+    dana spends 0.5 SOL from the Operations vault through limit `dana-ops`: succeeded
+      vault balance 50 -> 49.5 SOL
+    The limit is its own account with its own delegate list. Removing the member did not touch it.
+
+[3] Scan the declared scope
+
+$ exitguard scan --scope demo-out\scope.json --rpc http://127.0.0.1:18899 --discover --out demo-out\review.json
+
+Scan of 2 declared treasuries
+  organization  lagoon-labs   review offboard-dana-2026-10
+  subject       AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y  (operator_attested)
+  cluster       local-simulation  [LOCAL_SIMULATION]  finalized, slots 310000026..310000026, 2 passes agreed
+  coverage      21 addresses required: 20 present, 1 verified absent, 0 errors
+
+Authority held by the subject
+  treasury             authority                              status     note
+  Grants treasury      member: Initiate+Vote                  plannable  can be removed by proposal
+  Operations treasury  member: Initiate+Vote+Execute          plannable  can be removed by proposal
+  Operations treasury  spending limit 9CPZ..fGpk: 2 SOL/week  plannable  can be removed by proposal
+
+Spending limits that stay (subject is not a delegate)
+  treasury             limit       allowance    delegates
+  Operations treasury  5gAp..oYaf  5 SOL/month  2VfU..nMdZ
+
+Unfinished actions in these treasuries (need a decision each)
+  treasury         index  type   state     payload                                                       notes
+  Grants treasury  #1     Vault  approved  pay 1.5 SOL to 7Mtr..y4JX                                     approved by the subject; survives removal
+  Grants treasury  #2     Vault  pending   pay 1 SOL to KhA9..nfaB                                       approved by the subject
+  Grants treasury  #3     Batch  approved  2 of 2 batch payments left: pay 0.25 SOL to 7Mtr..y4JX; pa..  survives removal
+  Grants treasury  #4     Vault  latent    pay 4 SOL to Ezn9..fuGc                                       created by the subject
+  survives removal: already approved, so it can still execute after the subject is removed
+
+Found outside the declared scope (best effort, not a completeness claim)
+  kind                 multisig                                      detail
+  multisig_membership  GAA7cdYEU5mZVTVdkb7cC1RYjTF2CqD7aqoHQH7zZXDt  Initiate+Vote+Execute, threshold 1 of 2
+
+REVIEW_READY  demo-out\review.json
+  review_sha256 e9d54771f4ea85ef84c259d57b7a5e48f501ca21becdfc92a7983c021384d4d4
+
+[4] Decide each row
+    The operator fills in decisions.json by hand. Here a script plays the operator.
+
+$ exitguard review --review demo-out\review.json --decisions demo-out\decisions.json --out demo-out\intent.json
+
+Decisions bound to this review
+  row                         decision  expires at slot  reason
+  Grants treasury member      REVOKE    310216026        dana left the company on 2026-10-09
+  Operations treasury member  REVOKE    310216026        dana left the company on 2026-10-09
+  Operations treasury limit   REVOKE    310216026        dana left the company on 2026-10-09
+  Grants treasury #1 Vault    KEEP      310216026        approved before the departure; the approval stands as the organisation's decision
+  Grants treasury #2 Vault    KEEP      310216026        still collecting votes; finance re-proposes it if it goes stale
+  Grants treasury #3 Batch    KEEP      310216026        approved before the departure; the approval stands as the organisation's decision
+  Grants treasury #4 Vault    REVOKE    310216026        dana created this payment to dana's own wallet; it must not be proposed
+
+INTENT_BOUND  demo-out\intent.json
+  intent_sha256 649612d48d2800fff2363ab43f0381719f90e9cf37784dcec8fa5244ba3f1284
+
+[5] Plan the removal and check it against fresh state
+
+$ exitguard plan --review demo-out\review.json --intent demo-out\intent.json --rpc http://127.0.0.1:18899 --out demo-out\packet.json
+
+Unsigned remediation packet
+  Grants treasury  config transaction #5
+    1. RemoveMember         AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y
+    proposer 4Vyt..upG5   approvals 2 of 3 eligible   executor 4Vyt..upG5   time lock 0s
+    action digest b131b355009741fd75dbd8d07f989aa6958acdbc50c8de71650ee5c9fcf0a869
+  Operations treasury  config transaction #3
+    1. RemoveSpendingLimit  9CPZR3x5tRZ294VNVjtVYX87tDSGhBZuB69PgvCCfGpk
+    2. RemoveMember         AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y
+    proposer 4Vyt..upG5   approvals 2 of 2 eligible   executor 4Vyt..upG5   time lock 0s
+    action digest 1785f9e0814e929c66d0cd2c418e9c8fe8c87979081540f76b87d163a6096418
+
+PACKET_READY  demo-out\packet.json
+  packet_sha256 9fad868d01a197056fb8ccb81894fecaf342eed2611da82a58c2d7946e71a1e9
+  instructions decoded back from bytes: 11 checked
+
+$ exitguard verify-plan --packet demo-out\packet.json --rpc http://127.0.0.1:18899 --messages demo-out\messages.json
+
+Plan against fresh chain state
+  read at slots 310000026..310000026 (finalized)
+  Grants treasury #5  READY_TO_CREATE
+  Operations treasury #3  READY_TO_CREATE
+
+VALID  the packet still matches what was reviewed
+  9 unsigned messages rebuilt on a fresh blockhash and decoded back: demo-out\messages.json
+
+[6] Members approve and execute
+    ExitGuard holds no keys. Demo keys stand in for the members' own Squads tooling; the plan is rechecked before every hand-off.
+    verify-plan: VALID  (READY_TO_CREATE)
+    ada creates both config transactions and their proposals: 2 transactions landed
+    verify-plan: VALID  (AWAITING_APPROVAL)
+    ada and bayo approve: 4 transactions landed
+    verify-plan: VALID  (READY_TO_EXECUTE)
+    ada executes: 2 transactions landed
+
+[7] Certify the result
+
+$ exitguard certify --packet demo-out\packet.json --review demo-out\review.json --intent demo-out\intent.json --rpc http://127.0.0.1:18899 --out demo-out\record.json
+
+Offboarding record
+  subject        AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y
+  evidence       LOCAL_SIMULATION   pre slots 310000026..310000026   post slots 310000034..310000034 (finalized)
+  removed  treasury             detail
+  member   Grants treasury      Initiate+Vote
+  member   Operations treasury  Initiate+Vote+Execute
+  limit    Operations treasury  2 SOL/week
+  residual                  decision  at review  now
+  Grants treasury #1 Vault  KEEP      approved   approved
+  Grants treasury #2 Vault  KEEP      pending    inert_stale
+  Grants treasury #3 Batch  KEEP      approved   approved
+  Grants treasury #4 Vault  REVOKE    latent     inert_stale
+  valid until slot 310216026; executor_bypass: true
+
+COMPLETE  demo-out\record.json
+  record_sha256 5dbdf3a5d4318055be20ac09d1f568c8db12121286f39f467d7b0674455a27a7
+
+  The same spends as before, now against the remediated treasury:
+    dana spends 0.5 SOL from the Operations vault through limit `dana-ops`: failed
+      vault balance 50 -> 50 SOL   program error 0xbc4 (Anchor 3012 AccountNotInitialized: the spending limit account no longer exists)
+    payroll-bot spends 0.25 SOL from the Operations vault through limit `payroll-bot`: succeeded
+      vault balance 50 -> 49.75 SOL
+
+[8] Verify the record
+    Integrity, recorded postconditions and current validity are reported separately.
+
+$ exitguard verify-certificate --record demo-out\record.json --expect-sha256 5dbdf3a5d4318055.. --rpc http://127.0.0.1:18899
+
+Record verification
+  historical integrity   PASS
+  recorded postconditions  PASS   (re-derived from the raw account bytes in the record)
+  scope attestation      unsigned_assertion   subject provenance: operator_attested
+  evidence source        LOCAL_SIMULATION
+  current validity       CURRENT
+
+  A record is not a lock. ada and bayo now add dana back through ordinary Squads governance:
+
+$ exitguard verify-certificate --record demo-out\record.json --expect-sha256 5dbdf3a5d4318055.. --rpc http://127.0.0.1:18899
+
+Record verification
+  historical integrity   PASS
+  recorded postconditions  PASS   (re-derived from the raw account bytes in the record)
+  scope attestation      unsigned_assertion   subject provenance: operator_attested
+  evidence source        LOCAL_SIMULATION
+  current validity       CHANGED
+      subject authority exists again: member:FJsB29Jaef3mjZxDV67ikLwbAkxBZu6DfJxgcCc73FAY:AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y
+
+[9] Negative controls
+    Each one builds a fresh organisation, breaks one thing and runs the same commands.
+  stage        situation                                          blocker raised              result
+  scan         lookup table used by a live payment is gone        ALT_MISSING                 refused
+  scan         approved batch is missing a remaining child        BATCH_CHILD_MISSING         refused
+  scan         lookup index points past the end of its table      ALT_INDEX_OUT_OF_RANGE      refused
+  scan         instruction uses a key index that does not exist   MESSAGE_INDEX_OUT_OF_RANGE  refused
+  scan         spending limit account is truncated                ACCOUNT_MALFORMED           refused
+  scan         declared multisig is owned by another program      ACCOUNT_FOREIGN_OWNER       refused
+  scan         RPC returns fewer accounts than requested          RPC_INCOMPLETE_RESULT       refused
+  policy       subject shares a spending limit with someone else  SHARED_SPENDING_LIMIT       refused
+  policy       multisig has a non-default config authority        CONTROLLED_MULTISIG         refused
+  verify-plan  limit rewritten at the same address after review   REVIEW_DRIFT                refused
+  verify-plan  absent proposal created, parent index unchanged    PROPOSAL_APPEARED           refused
+  verify-plan  packet bytes altered and every digest recomputed   PACKET_DECODE_MISMATCH      refused
+  certify      threshold lowered after execution                  RETAINED_STATE_CHANGED      refused
+  certify      only the member was removed, limit left behind     SUBJECT_STILL_DELEGATE      refused
+  certify      Squads ProgramData changed after review            PROGRAM_DRIFT               refused
+  certify      new approved payment with no decision              RESIDUAL_UNDECIDED          refused
+  certify      live-looking node read at confirmed                NOT_FINALIZED               refused
+  certify      decisions expired before certification             EXPIRY_INVALID              refused
+  18 of 18 refused. None of them published a packet or a record.
+
+Files written
+  demo-out\scope.json                    872 bytes
+  demo-out\review.json                 31911 bytes
+  demo-out\decisions.json               1909 bytes
+  demo-out\intent.json                  4491 bytes
+  demo-out\packet.json                 21934 bytes
+  demo-out\packet.messages.json         6492 bytes
+  demo-out\messages.json                6501 bytes
+  demo-out\record.json                 24296 bytes
+
+DEMO PASSED  in 32.8s   record_sha256 5dbdf3a5d4318055be20ac09d1f568c8db12121286f39f467d7b0674455a27a7

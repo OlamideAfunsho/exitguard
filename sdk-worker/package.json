@@ -1,0 +1,15 @@
+{
+  "name": "exitguard-sdk-worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Builds Squads v4 instructions with the official SDK. Reads JSON on stdin, writes JSON on stdout. No network access, no keys.",
+  "type": "commonjs",
+  "main": "worker.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@solana/web3.js": "1.95.3",
+    "@sqds/multisig": "2.1.4"
+  }
+}

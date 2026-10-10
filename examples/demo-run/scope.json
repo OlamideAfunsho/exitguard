@@ -1,0 +1,30 @@
+{
+  "organization_id": "lagoon-labs",
+  "resources": [
+    {
+      "label": "Operations treasury",
+      "scope": "manifest_owned",
+      "state_address": "FJsB29Jaef3mjZxDV67ikLwbAkxBZu6DfJxgcCc73FAY"
+    },
+    {
+      "label": "Grants treasury",
+      "scope": "manifest_owned",
+      "state_address": "D9QEm12tsY9EFhBCGmA22K2QJFnrk7kUzCLHow3QE6Cz"
+    }
+  ],
+  "review_id": "offboard-dana-2026-10",
+  "reviewer": {
+    "attested_at": "2026-10-10T09:00:00Z",
+    "wallet": "4Vythg5H7S7FVRqhQGLtvhkA8BQqJ276x6e7YtjHupG5"
+  },
+  "schema_version": "exitguard.review-scope.v1",
+  "scope_attested_complete": true,
+  "squads_program_id": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+  "subject_wallets": [
+    {
+      "address": "AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y",
+      "label": "dana (departing engineer)",
+      "provenance": "operator_attested"
+    }
+  ]
+}

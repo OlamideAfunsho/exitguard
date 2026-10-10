@@ -1,0 +1,97 @@
+{
+  "decisions": [
+    {
+      "account_sha256": "2abab72a271583e33a11000682533a2f4080d6068288f6bf34c8aba938d6f3d8",
+      "decision": "REVOKE",
+      "expires_at_slot": 310216026,
+      "id": "member:D9QEm12tsY9EFhBCGmA22K2QJFnrk7kUzCLHow3QE6Cz:AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y",
+      "kind": "authority",
+      "reason": "dana left the company on 2026-10-09",
+      "review_sha256": "e9d54771f4ea85ef84c259d57b7a5e48f501ca21becdfc92a7983c021384d4d4"
+    },
+    {
+      "account_sha256": "125b2907d56c9b55ebb2a0101ed233043f7833956fd50fff73c5dc3d992a6db3",
+      "decision": "REVOKE",
+      "expires_at_slot": 310216026,
+      "id": "member:FJsB29Jaef3mjZxDV67ikLwbAkxBZu6DfJxgcCc73FAY:AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y",
+      "kind": "authority",
+      "reason": "dana left the company on 2026-10-09",
+      "review_sha256": "e9d54771f4ea85ef84c259d57b7a5e48f501ca21becdfc92a7983c021384d4d4"
+    },
+    {
+      "account_sha256": "016db00a5a66e78ffe41c9bea3b285a9ede610e1a8d4f99c1383af1c6bb308d2",
+      "decision": "REVOKE",
+      "expires_at_slot": 310216026,
+      "id": "limit:9CPZR3x5tRZ294VNVjtVYX87tDSGhBZuB69PgvCCfGpk",
+      "kind": "authority",
+      "reason": "dana left the company on 2026-10-09",
+      "review_sha256": "e9d54771f4ea85ef84c259d57b7a5e48f501ca21becdfc92a7983c021384d4d4"
+    },
+    {
+      "binding_sha256": "6570d427afd472be26b0275ef43e0725a8bfe09f4015dc2d76ad31a92c4921be",
+      "child_sha256": [],
+      "decision": "KEEP",
+      "expires_at_slot": 310216026,
+      "id": "proposal:ArvcYrDPppeiefYoLkG4aVSWDHRdKHtyR5FmAecNWzyv",
+      "kind": "residual",
+      "payload_sha256": "28e2cf14ba78e1739c41c47141e92888e5df0c291935a264392770e80e3bd869",
+      "reason": "approved before the departure; the approval stands as the organisation's decision",
+      "review_sha256": "e9d54771f4ea85ef84c259d57b7a5e48f501ca21becdfc92a7983c021384d4d4"
+    },
+    {
+      "binding_sha256": "060cb7f1554f5142d504ef7398b363e0aaccbd0bccafb302386ccb881f635c5e",
+      "child_sha256": [],
+      "decision": "KEEP",
+      "expires_at_slot": 310216026,
+      "id": "proposal:A4cv5s6qZragbqtzapeVFR6zDXivhRWNrP2HPKsD5Evm",
+      "kind": "residual",
+      "payload_sha256": "f01b9f022ae460a541d9699865b002a4907e4193d34e5ab6fa060f5cfbcec418",
+      "reason": "still collecting votes; finance re-proposes it if it goes stale",
+      "review_sha256": "e9d54771f4ea85ef84c259d57b7a5e48f501ca21becdfc92a7983c021384d4d4"
+    },
+    {
+      "binding_sha256": "955cae09cd2fc71e423befbcf15ff471614cdfe47ce78a437ee0c7a0012d41cd",
+      "child_sha256": [
+        "471a494a0b7210bd25e104ea474bee26bc15ac80ad1d5c2c2c90d7571dfd08e8",
+        "e01db6c66a4dfbe08fd9be467a1bbaeeeee99850ade8e8e887bead088a57e559"
+      ],
+      "decision": "KEEP",
+      "expires_at_slot": 310216026,
+      "id": "proposal:65EyLhxWR9DuHmFKYo6XCzuCcRzuT8YRixbXk9V9DZEQ",
+      "kind": "residual",
+      "payload_sha256": "a5f8a04385cbe6035801e401a02fe64a771a10f5da410f1ae530a2b17340e912",
+      "reason": "approved before the departure; the approval stands as the organisation's decision",
+      "review_sha256": "e9d54771f4ea85ef84c259d57b7a5e48f501ca21becdfc92a7983c021384d4d4"
+    },
+    {
+      "binding_sha256": "1222f2e3bb6b4161c409f6ba6ce1903e0cfe06d302571c139d10d8fb4e54d3d9",
+      "child_sha256": [],
+      "decision": "REVOKE",
+      "expires_at_slot": 310216026,
+      "id": "proposal:387msLEY344L1uPYxhi5HQm2QiZJiNzDNXziHbRLeX7e",
+      "kind": "residual",
+      "payload_sha256": "8c63cdf3378327de50a7e6a8467a42bef2ea181e9a5e29d43bc97274aaff722e",
+      "reason": "dana created this payment to dana's own wallet; it must not be proposed",
+      "review_sha256": "e9d54771f4ea85ef84c259d57b7a5e48f501ca21becdfc92a7983c021384d4d4"
+    }
+  ],
+  "intent_sha256": "649612d48d2800fff2363ab43f0381719f90e9cf37784dcec8fa5244ba3f1284",
+  "organization_id": "lagoon-labs",
+  "review_id": "offboard-dana-2026-10",
+  "review_sha256": "e9d54771f4ea85ef84c259d57b7a5e48f501ca21becdfc92a7983c021384d4d4",
+  "reviewer": "4Vythg5H7S7FVRqhQGLtvhkA8BQqJ276x6e7YtjHupG5",
+  "schema_version": "exitguard.intent.v1",
+  "scope_sha256": "8685e43c939a99b6693df320e9dcd0ef24fb796acf7f1c1815cfbcb9b110c941",
+  "state_digest": "d025b647e4e4fbe4961bbbf71ee186d35e6dee08ed6b5992adec4e48b2f8eb11",
+  "subject": "AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y",
+  "tally": {
+    "BLOCKED": 0,
+    "KEEP": 3,
+    "REVOKE": 4,
+    "UNKNOWN": 0
+  },
+  "tool": {
+    "name": "exitguard",
+    "version": "0.1.0"
+  }
+}

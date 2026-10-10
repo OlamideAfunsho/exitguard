@@ -1,0 +1,49 @@
+{
+  "decisions": [
+    {
+      "about": "Grants treasury",
+      "decision": "REVOKE",
+      "id": "member:D9QEm12tsY9EFhBCGmA22K2QJFnrk7kUzCLHow3QE6Cz:AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y",
+      "reason": "dana left the company on 2026-10-09"
+    },
+    {
+      "about": "Operations treasury",
+      "decision": "REVOKE",
+      "id": "member:FJsB29Jaef3mjZxDV67ikLwbAkxBZu6DfJxgcCc73FAY:AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y",
+      "reason": "dana left the company on 2026-10-09"
+    },
+    {
+      "about": "Operations treasury",
+      "decision": "REVOKE",
+      "id": "limit:9CPZR3x5tRZ294VNVjtVYX87tDSGhBZuB69PgvCCfGpk",
+      "reason": "dana left the company on 2026-10-09"
+    },
+    {
+      "about": "pay 1.5 SOL to 7Mtr..y4JX",
+      "decision": "KEEP",
+      "id": "proposal:ArvcYrDPppeiefYoLkG4aVSWDHRdKHtyR5FmAecNWzyv",
+      "reason": "approved before the departure; the approval stands as the organisation's decision"
+    },
+    {
+      "about": "pay 1 SOL to KhA9..nfaB",
+      "decision": "KEEP",
+      "id": "proposal:A4cv5s6qZragbqtzapeVFR6zDXivhRWNrP2HPKsD5Evm",
+      "reason": "still collecting votes; finance re-proposes it if it goes stale"
+    },
+    {
+      "about": "2 of 2 batch payments left: pay 0.25 SOL to 7Mtr..y4JX; pay 0.25 SOL to 8rbV..k3c1",
+      "decision": "KEEP",
+      "id": "proposal:65EyLhxWR9DuHmFKYo6XCzuCcRzuT8YRixbXk9V9DZEQ",
+      "reason": "approved before the departure; the approval stands as the organisation's decision"
+    },
+    {
+      "about": "pay 4 SOL to Ezn9..fuGc",
+      "decision": "REVOKE",
+      "id": "proposal:387msLEY344L1uPYxhi5HQm2QiZJiNzDNXziHbRLeX7e",
+      "reason": "dana created this payment to dana's own wallet; it must not be proposed"
+    }
+  ],
+  "expires_at_slot": 310216026,
+  "review_sha256": "e9d54771f4ea85ef84c259d57b7a5e48f501ca21becdfc92a7983c021384d4d4",
+  "schema_version": "exitguard.decisions.v1"
+}

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "exitguard.review-scope.v1",
+  "title": "ExitGuard review scope",
+  "description": "The operator's declaration of which Squads v4 multisigs belong to the organisation and which wallet is being offboarded. Addresses must be base58 and decode to exactly 32 bytes; exitguard/scope.py enforces that, along with the one-subject rule and de-duplication by state address.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "organization_id",
+    "review_id",
+    "squads_program_id",
+    "scope_attested_complete",
+    "resources",
+    "subject_wallets",
+    "reviewer"
+  ],
+  "properties": {
+    "schema_version": { "const": "exitguard.review-scope.v1" },
+    "organization_id": { "$ref": "#/$defs/localId", "description": "Local identifier. Not established by the chain." },
+    "review_id": { "$ref": "#/$defs/localId", "description": "Local identifier. Not established by the chain." },
+    "squads_program_id": { "const": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf" },
+    "scope_attested_complete": {
+      "type": "boolean",
+      "description": "true means the operator asserts the declared boundary. It is not proof that every treasury was found."
+    },
+    "resources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["state_address", "scope"],
+        "properties": {
+          "state_address": { "$ref": "#/$defs/address", "description": "Canonical Multisig state address, not a vault." },
+          "scope": { "enum": ["manifest_owned", "shared_or_external"] },
+          "label": { "type": "string", "description": "Display only. Never treated as ownership." }
+        }
+      }
+    },
+    "subject_wallets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["address", "provenance"],
+        "properties": {
+          "address": { "$ref": "#/$defs/address" },
+          "provenance": { "enum": ["operator_attested", "wallet_signed", "imported", "unverified"] },
+          "label": { "type": "string" },
+          "signature": { "type": "string", "description": "Base58 ed25519 signature by the subject over the attestation message. Required for wallet_signed to be honoured." }
+        }
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wallet", "attested_at"],
+      "properties": {
+        "wallet": { "$ref": "#/$defs/address" },
+        "attested_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$" },
+        "signature": { "type": "string", "description": "Optional base58 ed25519 signature over the attestation message. Without it the attestation is recorded as an unsigned assertion." }
+      }
+    }
+  },
+  "$defs": {
+    "address": { "type": "string", "pattern": "^[1-9A-HJ-NP-Za-km-z]{32,44}$" },
+    "localId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$" }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "cluster_genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "commitment": "finalized",
+  "accounts": {
+    "program": {
+      "address": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "lamports": "12171440",
+      "executable": true,
+      "data_len": 36,
+      "data_sha256": "7843a80c3208dd0357e30f7a504e94d8b0f17fbc237142ee7e4363858af0b54a",
+      "read_slot": 455404825
+    },
+    "programdata": {
+      "address": "Fy3YMJCvwbAXUgUM5b91ucUVA3jYzwWLHL3MwBqKsh8n",
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "lamports": "10236299440",
+      "executable": false,
+      "data_len": 1470461,
+      "data_sha256": "e1c596fdcf397686dfa67cc568c8c2e4696a1ef6949de4c2d251527913af7f1e",
+      "read_slot": 455404828
+    },
+    "program_config": {
+      "address": "BSTq9w3kZwNwpBXJEvTZz2G9ZTNyKBvoSeXMvwb4cNZr",
+      "owner": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+      "lamports": "1893120",
+      "executable": false,
+      "data_len": 144,
+      "data_sha256": "ba8e7712f069f2e68e8583b105ac2eb22d791265440da56df32f9f3f734af3e0",
+      "read_slot": 455404845
+    }
+  },
+  "programdata_deploy_slot": "302582236",
+  "elf_sha256": "dec8d3e0fae58c7c8f2416e5f67c25e673f047afd6dd2bba4a47e0b29a01d34c"
+}
