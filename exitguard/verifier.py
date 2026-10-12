@@ -146,6 +146,29 @@ def check_transaction(tx: dict, program_id: str, subject: str) -> list[str]:
     return problems
 
 
+def bound_expiries(intent: dict) -> list[dict]:
+    """The expiry of every decision, in the form the packet carries under its digest."""
+    return [{"id": d["id"], "decision": d["decision"], "expires_at_slot": d["expires_at_slot"]}
+            for d in intent["decisions"] if d["decision"] != "UNKNOWN"]
+
+
+def expiry_blockers(rows: object, slot: int | None, read: str) -> list[Blocker]:
+    """Decisions that no longer stand at `slot`. A decision is good strictly before its expiry slot,
+    the same boundary certify uses, so nothing can be signed under a decision certify would reject."""
+    if not isinstance(rows, list):
+        return [Blocker("EXPIRY_INVALID", "packet", "packet carries no decision expiries; plan again with this version")]
+    out = []
+    for row in rows:
+        expiry = row.get("expires_at_slot") if isinstance(row, dict) else None
+        subject = str(row.get("id")) if isinstance(row, dict) else "packet"
+        if isinstance(expiry, bool) or not isinstance(expiry, int):
+            out.append(Blocker("EXPIRY_INVALID", subject, "decision has no integer expiry slot"))
+        elif slot is None or expiry <= slot:
+            out.append(Blocker("EXPIRY_INVALID", subject,
+                               f"decision expired at slot {expiry}; {read} at slot {slot}. Review again."))
+    return out
+
+
 def check_packet(packet: dict) -> list[str]:
     if packet.get("schema_version") != PACKET_SCHEMA:
         return ["packet schema_version is not " + PACKET_SCHEMA]
@@ -286,6 +309,9 @@ def verify_plan(client: RpcClient, packet: dict) -> dict:
     reasons += col.blockers
     if col.cluster.get("genesis_hash") != packet["cluster"]["genesis_hash"]:
         reasons.append(Blocker("CLUSTER_MISMATCH", client.endpoint, "genesis hash differs from the reviewed cluster"))
+
+    # The operator's decisions are only good for a while. Unchanged accounts do not extend them.
+    reasons += expiry_blockers(packet.get("decision_expiries"), col.rpc.get("slot_last"), "fresh state was read")
 
     before = packet["preconditions"]["accounts"]
     after = col.fingerprint()

@@ -159,6 +159,8 @@ def packet(doc: dict) -> None:
         say(f"    proposer {short(s['proposer'])}   approvals {s['approvals_required']} of {len(s['approvers'])} eligible   "
             f"executor {short(s['executor'])}   time lock {s['time_lock_seconds']}s")
         say(paint(f"    action digest {tx['action_digest']}", "dim"))
+    if doc.get("expires_at_slot") is not None:
+        say(f"  decisions behind this packet expire at slot {doc['expires_at_slot']}; it cannot be verified or certified from then on")
     for item in doc["not_planned"]:
         if item["decision"] in ("BLOCKED", "KEEP") and item["id"].split(":")[0] in ("member", "limit", "config_authority"):
             say(f"  {paint('not planned', 'yellow')}  {_clip(item['id'], 60)}  {item['decision']}  ({', '.join(item['why'])})")

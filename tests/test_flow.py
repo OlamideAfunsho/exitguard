@@ -5,6 +5,7 @@ import copy
 from pathlib import Path
 
 from exitguard import canon, planner, record as record_mod, squads, verifier
+from exitguard.rpc import RpcClient
 from exitguard.sim.world import SOL, World
 
 
@@ -166,3 +167,77 @@ def test_record_tampering(session):
     forged = canon.seal(forged, "record_sha256")
     result = record_mod.verify_certificate(forged, forged["record_sha256"])
     assert result["historical_integrity"] == "PASS" and result["content"] == "FAIL"
+
+
+def _slot(session) -> int:
+    return session.world.chain.slot
+
+
+def test_plan_refuses_expired_decisions(session):
+    """Nothing but time changes between the three attempts."""
+    s, chain = session, session.world.chain
+    assert s.scan() == 0
+    assert s.decide(expires_in=10) == 0
+    expiry = canon.load(s.path("intent"))["decisions"][0]["expires_at_slot"]
+
+    chain.advance(expiry - 1 - _slot(s))            # one slot before expiry
+    assert s.plan() == 0
+    packet = canon.load(s.path("packet"))
+    assert packet["expires_at_slot"] == expiry
+    assert {e["expires_at_slot"] for e in packet["decision_expiries"]} == {expiry}
+    assert len(packet["decision_expiries"]) == len(canon.load(s.path("intent"))["decisions"])
+    Path(s.path("packet")).unlink()
+
+    chain.advance(1)                                # at expiry
+    assert _slot(s) == expiry
+    assert s.plan() == 2 and s.codes("packet") == {"EXPIRY_INVALID"}
+    assert not Path(s.path("packet")).exists()
+
+    chain.advance(1)                                # after expiry
+    assert s.plan() == 2 and s.codes("packet") == {"EXPIRY_INVALID"}
+    assert not Path(s.path("packet")).exists()
+
+
+def test_verify_plan_refuses_expired_decisions(session):
+    s, chain = session, session.world.chain
+    assert s.scan() == 0
+    assert s.decide(expires_in=10) == 0
+    assert s.plan() == 0
+    packet = canon.load(s.path("packet"))
+    expiry = packet["expires_at_slot"]
+    state = verifier.verify_plan(RpcClient(s.url), packet)["read"]["state_digest"]
+
+    chain.advance(expiry - 1 - _slot(s))            # one slot before expiry
+    assert s.verify() == 0
+    assert Path(s.path("messages")).exists()
+    Path(s.path("messages")).unlink()
+
+    chain.advance(1)                                # at expiry
+    assert s.verify() == 2 and s.codes("messages") == {"EXPIRY_INVALID"}
+    assert not Path(s.path("messages")).exists()
+
+    chain.advance(1)                                # after expiry
+    result = verifier.verify_plan(RpcClient(s.url), packet)
+    assert result["verdict"] == "PLAN_INVALIDATED"
+    assert {r["code"] for r in result["reasons"]} == {"EXPIRY_INVALID"}
+    assert result["read"]["state_digest"] == state   # every account is exactly as planned; only time moved
+    assert s.verify() == 2 and not Path(s.path("messages")).exists()
+
+
+def test_expiries_in_the_packet_cannot_be_extended(session):
+    s = session
+    s.through_plan(expires_in=10)
+    packet = canon.load(s.path("packet"))
+
+    edited = copy.deepcopy(packet)
+    for row in edited["decision_expiries"]:
+        row["expires_at_slot"] += 1_000_000
+    assert verifier.check_packet(edited) == ["packet does not match its packet_sha256"]
+
+    # Recomputing the digest gets past verify-plan's own checks, but certify compares with the intent.
+    canon.write(s.path("packet"), canon.seal(edited, "packet_sha256"))
+    assert s.certify() == 2 and "INTENT_INVALID" in s.codes("record")
+
+    stripped = {k: v for k, v in packet.items() if k != "decision_expiries"}
+    result = verifier.verify_plan(RpcClient(s.url), canon.seal(stripped, "packet_sha256"))
+    assert "EXPIRY_INVALID" in {r["code"] for r in result["reasons"]}

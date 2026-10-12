@@ -74,7 +74,14 @@ no longer applies and `certify` reports `RESIDUAL_UNDECIDED`.
 
 `transactions[]` has one entry per multisig: the ordered actions, the signer roles, and `instructions[]` with
 `program_id`, `accounts` (pubkey, `is_signer`, `is_writable`), base64 `data` and a digest each.
-`action_digest` covers the ordered instruction digests and the actions. These do not expire.
+`action_digest` covers the ordered instruction digests and the actions. The instruction bytes themselves do
+not expire.
+
+The decisions behind them do. `decision_expiries[]` lists every decided row with its `expires_at_slot`, and
+`expires_at_slot` at the top level is the earliest. Both are under `packet_sha256`. A decision is good while
+the slot of the fresh read is strictly below its expiry; `plan` and `verify-plan` refuse with `EXPIRY_INVALID`
+from the expiry slot onward, which is the same boundary `certify` applies. A packet without
+`decision_expiries` is refused, and `certify` rejects a packet whose expiries differ from the intent's.
 
 Unsigned messages are kept in a separate file because they do. `plan` writes them on a placeholder blockhash
 (`blockhash_source: "placeholder"`) so their shape can be inspected; `verify-plan --messages` rebuilds them on

@@ -84,9 +84,10 @@ Unsigned remediation packet
     2. RemoveMember         AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y
     proposer 4Vyt..upG5   approvals 2 of 2 eligible   executor 4Vyt..upG5   time lock 0s
     action digest 1785f9e0814e929c66d0cd2c418e9c8fe8c87979081540f76b87d163a6096418
+  decisions behind this packet expire at slot 310216026; it cannot be verified or certified from then on
 
 PACKET_READY  demo-out\packet.json
-  packet_sha256 9fad868d01a197056fb8ccb81894fecaf342eed2611da82a58c2d7946e71a1e9
+  packet_sha256 c27b449ef5ea4e7b7b27e668fc72be7761d8197bf36e56b9929538e61b913821
   instructions decoded back from bytes: 11 checked
 
 $ exitguard verify-plan --packet demo-out\packet.json --rpc http://127.0.0.1:18899 --messages demo-out\messages.json
@@ -127,7 +128,7 @@ Offboarding record
   valid until slot 310216026; executor_bypass: true
 
 COMPLETE  demo-out\record.json
-  record_sha256 5dbdf3a5d4318055be20ac09d1f568c8db12121286f39f467d7b0674455a27a7
+  record_sha256 176c78182491d1d9183dea01e352a30d3d2a534ca71144417e98a6704ba32d3e
 
   The same spends as before, now against the remediated treasury:
     dana spends 0.5 SOL from the Operations vault through limit `dana-ops`: failed
@@ -138,7 +139,7 @@ COMPLETE  demo-out\record.json
 [8] Verify the record
     Integrity, recorded postconditions and current validity are reported separately.
 
-$ exitguard verify-certificate --record demo-out\record.json --expect-sha256 5dbdf3a5d4318055.. --rpc http://127.0.0.1:18899
+$ exitguard verify-certificate --record demo-out\record.json --expect-sha256 176c78182491d1d9.. --rpc http://127.0.0.1:18899
 
 Record verification
   historical integrity   PASS
@@ -149,7 +150,7 @@ Record verification
 
   A record is not a lock. ada and bayo now add dana back through ordinary Squads governance:
 
-$ exitguard verify-certificate --record demo-out\record.json --expect-sha256 5dbdf3a5d4318055.. --rpc http://127.0.0.1:18899
+$ exitguard verify-certificate --record demo-out\record.json --expect-sha256 176c78182491d1d9.. --rpc http://127.0.0.1:18899
 
 Record verification
   historical integrity   PASS
@@ -174,22 +175,23 @@ Record verification
   verify-plan  limit rewritten at the same address after review   REVIEW_DRIFT                refused
   verify-plan  absent proposal created, parent index unchanged    PROPOSAL_APPEARED           refused
   verify-plan  packet bytes altered and every digest recomputed   PACKET_DECODE_MISMATCH      refused
+  verify-plan  decisions expired, accounts unchanged              EXPIRY_INVALID              refused
   certify      threshold lowered after execution                  RETAINED_STATE_CHANGED      refused
   certify      only the member was removed, limit left behind     SUBJECT_STILL_DELEGATE      refused
   certify      Squads ProgramData changed after review            PROGRAM_DRIFT               refused
   certify      new approved payment with no decision              RESIDUAL_UNDECIDED          refused
   certify      live-looking node read at confirmed                NOT_FINALIZED               refused
   certify      decisions expired before certification             EXPIRY_INVALID              refused
-  18 of 18 refused. None of them published a packet or a record.
+  19 of 19 refused. None of them published a packet or a record.
 
 Files written
   demo-out\scope.json                    872 bytes
   demo-out\review.json                 31911 bytes
   demo-out\decisions.json               1909 bytes
   demo-out\intent.json                  4491 bytes
-  demo-out\packet.json                 21934 bytes
+  demo-out\packet.json                 23087 bytes
   demo-out\packet.messages.json         6492 bytes
   demo-out\messages.json                6501 bytes
   demo-out\record.json                 24296 bytes
 
-DEMO PASSED  in 32.8s   record_sha256 5dbdf3a5d4318055be20ac09d1f568c8db12121286f39f467d7b0674455a27a7
+DEMO PASSED  in 32.2s   record_sha256 176c78182491d1d9183dea01e352a30d3d2a534ca71144417e98a6704ba32d3e

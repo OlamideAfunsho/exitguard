@@ -42,7 +42,7 @@ writing bytes. In order, it shows:
    meant to stay still works.
 5. `verify-certificate` passing, then failing its "current validity" check after two members add dana back
    through ordinary governance. The record stays intact as history; it stops being true.
-6. Eighteen negative controls. Each builds a fresh organisation, breaks one thing, and has to be refused with
+6. Nineteen negative controls. Each builds a fresh organisation, breaks one thing, and has to be refused with
    a named blocker and no packet or record published.
 
 Output from one run, with every file it wrote, is in `examples/demo-run/`. Runs are reproducible: the same
@@ -51,7 +51,7 @@ commit produces the same `record_sha256`.
 A recording of that run is at `docs/demo/exitguard-demo.mp4` (two and a half minutes). It is generated from
 the demo's own output by `tools/make_video.py`, not screen-captured and edited.
 
-`pytest` runs the same paths as assertions (45 tests, under a minute), including a field-by-field comparison
+`pytest` runs the same paths as assertions (49 tests, about a minute), including a field-by-field comparison
 of the Python account decoders against `@sqds/multisig` on accounts the real program wrote.
 
 ## Commands
@@ -156,6 +156,10 @@ invalidates the plan, with the reason named: `REVIEW_DRIFT`, `PROPOSAL_APPEARED`
 verified absent now exists, which can happen without the multisig account changing at all), `PROGRAM_DRIFT`,
 `INDEX_COLLISION`, `NEW_DEPENDENCY`. The plan's own creation and approvals are recognised as expected
 transitions, so `verify-plan` can be run before each hand-off.
+
+**Expiry.** Every decision carries `expires_at_slot`, and the packet carries all of them under its digest.
+`plan`, `verify-plan` and `certify` each compare them with the slot of their own fresh read and refuse with
+`EXPIRY_INVALID` at or after that slot. Accounts being unchanged does not keep an old decision alive.
 
 **The record.** Written only if every postcondition holds: subject absent from every in-scope member and
 delegate array, planned limits closed, remediation proposals Executed with the reviewed actions, retained

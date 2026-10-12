@@ -105,6 +105,8 @@ def certify(client: RpcClient, packet: dict, review: dict, intent: dict) -> tupl
         blockers.append(Blocker("PACKET_DECODE_MISMATCH", "packet", problem))
     if packet.get("review_sha256") != review["review_sha256"] or packet.get("intent_sha256") != intent["intent_sha256"]:
         blockers.append(Blocker("INTENT_INVALID", "packet", "packet was not planned from this review and intent"))
+    if packet.get("decision_expiries") != verifier.bound_expiries(intent):
+        blockers.append(Blocker("INTENT_INVALID", "packet", "decision expiries in the packet differ from the intent"))
     if blockers:
         return None, sort_unique(blockers)
 

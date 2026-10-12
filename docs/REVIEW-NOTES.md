@@ -34,6 +34,13 @@ key spending from its limit is not drift but an edit to the limit is. Test: `pos
 There is no flag that sets it. A node that does not identify as the simulator is held to finalized
 commitment. Test: `not-finalized`.
 
+**Decisions outlive their expiry.** Found by an outside reviewer, not by me: `plan` and `verify-plan`
+originally checked only account drift, so with unchanged accounts `verify-plan` still said `VALID` after the
+decisions had expired, and only `certify` caught it, after signing. Expiries are now bound into the packet and
+checked against the fresh read slot in both commands. Tests: `test_plan_refuses_expired_decisions`,
+`test_verify_plan_refuses_expired_decisions` (one slot before, at, and one slot after expiry, accounts
+untouched), `expired-plan` control.
+
 ## Ways to get a packet that is not what was reviewed
 
 **The worker returns something else.** The Node worker is the only place SDK code runs. Its output is decoded

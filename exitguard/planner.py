@@ -83,6 +83,8 @@ def plan(client: RpcClient, review: dict, intent: dict, proposer: str | None = N
             code = "PROGRAM_DRIFT" if role in ("program", "programdata") else (
                 "PROPOSAL_APPEARED" if reviewed.get(address) == "ABSENT" and role.startswith("proposal:") else "REVIEW_DRIFT")
             problems.append(Blocker(code, address, f"{role} differs from the reviewed state; scan and review again"))
+    expiries = verifier.bound_expiries(intent)
+    problems += verifier.expiry_blockers(expiries, col.rpc.get("slot_last"), "fresh state was read")
     if problems:
         raise ExitGuardError(problems, verdict="PLAN_REFUSED")
 
@@ -154,6 +156,8 @@ def plan(client: RpcClient, review: dict, intent: dict, proposer: str | None = N
             "accounts": fresh,
             "multisig_data": {ms: base64.b64encode(col.reads[ms].data).decode() for ms in sorted(col.multisigs)},
         },
+        "decision_expiries": expiries,
+        "expires_at_slot": min(e["expires_at_slot"] for e in expiries) if expiries else None,
         "transactions": transactions,
         "not_planned": not_planned,
         "execution": {

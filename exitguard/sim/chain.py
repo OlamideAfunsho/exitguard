@@ -85,6 +85,10 @@ class SimChain:
 
     # --------------------------------------------------------- direct use
 
+    def advance(self, slots: int) -> None:
+        """Let time pass without touching any account."""
+        self._tick(slots)
+
     def airdrop(self, address: Pubkey | str, lamports: int) -> None:
         self.svm.airdrop(_pk(address), lamports)
 

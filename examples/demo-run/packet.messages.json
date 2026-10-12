@@ -106,6 +106,6 @@
       "transaction_index": "3"
     }
   ],
-  "packet_sha256": "9fad868d01a197056fb8ccb81894fecaf342eed2611da82a58c2d7946e71a1e9",
+  "packet_sha256": "c27b449ef5ea4e7b7b27e668fc72be7761d8197bf36e56b9929538e61b913821",
   "schema_version": "exitguard.messages.v1"
 }

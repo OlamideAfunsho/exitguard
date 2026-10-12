@@ -5,11 +5,49 @@
     "name": "local-simulation",
     "node_version": "litesvm"
   },
+  "decision_expiries": [
+    {
+      "decision": "REVOKE",
+      "expires_at_slot": 310216026,
+      "id": "member:D9QEm12tsY9EFhBCGmA22K2QJFnrk7kUzCLHow3QE6Cz:AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y"
+    },
+    {
+      "decision": "REVOKE",
+      "expires_at_slot": 310216026,
+      "id": "member:FJsB29Jaef3mjZxDV67ikLwbAkxBZu6DfJxgcCc73FAY:AwpkVsWygTainFC5f4uZecD6WKQpeAgM8iTovzZ4Ao6y"
+    },
+    {
+      "decision": "REVOKE",
+      "expires_at_slot": 310216026,
+      "id": "limit:9CPZR3x5tRZ294VNVjtVYX87tDSGhBZuB69PgvCCfGpk"
+    },
+    {
+      "decision": "KEEP",
+      "expires_at_slot": 310216026,
+      "id": "proposal:ArvcYrDPppeiefYoLkG4aVSWDHRdKHtyR5FmAecNWzyv"
+    },
+    {
+      "decision": "KEEP",
+      "expires_at_slot": 310216026,
+      "id": "proposal:A4cv5s6qZragbqtzapeVFR6zDXivhRWNrP2HPKsD5Evm"
+    },
+    {
+      "decision": "KEEP",
+      "expires_at_slot": 310216026,
+      "id": "proposal:65EyLhxWR9DuHmFKYo6XCzuCcRzuT8YRixbXk9V9DZEQ"
+    },
+    {
+      "decision": "REVOKE",
+      "expires_at_slot": 310216026,
+      "id": "proposal:387msLEY344L1uPYxhi5HQm2QiZJiNzDNXziHbRLeX7e"
+    }
+  ],
   "execution": {
     "note": "ExitGuard holds no keys. Members approve and execute these instructions with their usual Squads tooling. Signers must keep instruction bytes and account metas exactly as reviewed.",
     "signing": "external"
   },
   "executor_bypass": true,
+  "expires_at_slot": 310216026,
   "intent_sha256": "649612d48d2800fff2363ab43f0381719f90e9cf37784dcec8fa5244ba3f1284",
   "not_planned": [
     {
@@ -42,7 +80,7 @@
     }
   ],
   "organization_id": "lagoon-labs",
-  "packet_sha256": "9fad868d01a197056fb8ccb81894fecaf342eed2611da82a58c2d7946e71a1e9",
+  "packet_sha256": "c27b449ef5ea4e7b7b27e668fc72be7761d8197bf36e56b9929538e61b913821",
   "preconditions": {
     "accounts": {
       "387msLEY344L1uPYxhi5HQm2QiZJiNzDNXziHbRLeX7e": "ABSENT",

@@ -66,7 +66,7 @@ CUES = [
     ("  A record is not a lock",
      "A record is not a lock. Once dana is added back, the record is still intact as history, but it is no longer current.", 9),
     ("[9] Negative controls",
-     "Eighteen ways to break it. Each has to be refused with a named blocker, without publishing a packet or a record.", 11),
+     "Nineteen ways to break it. Each has to be refused with a named blocker, without publishing a packet or a record.", 11),
     ("Files written",
      "One command, about thirty seconds. The same commit produces the same record digest every time.", 7),
 ]

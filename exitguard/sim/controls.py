@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Callable
 
 from .. import canon, squads, verifier
-from .session import Session
+from .session import DAY_OF_SLOTS, Session
 from .world import SOL, World, address, lookup_table_bytes
 
 
@@ -201,6 +201,8 @@ CONTROLS: list[Control] = [
             _stale_control(_late_proposal)),
     Control("forged-packet", "verify-plan", "packet bytes altered and every digest recomputed", "PACKET_DECODE_MISMATCH",
             _stale_control(_forge_packet)),
+    Control("expired-plan", "verify-plan", "decisions expired, accounts unchanged", "EXPIRY_INVALID",
+            _stale_control(lambda w, _s: w.chain.advance(DAY_OF_SLOTS))),
     Control("post-drift", "certify", "threshold lowered after execution", "RETAINED_STATE_CHANGED",
             _certify_control(_lower_threshold)),
     Control("still-delegate", "certify", "only the member was removed, limit left behind", "SUBJECT_STILL_DELEGATE",
@@ -212,5 +214,5 @@ CONTROLS: list[Control] = [
     Control("not-finalized", "certify", "live-looking node read at confirmed", "NOT_FINALIZED",
             _certify_control(before=_hide_simulation, commitment="confirmed")),
     Control("expired", "certify", "decisions expired before certification", "EXPIRY_INVALID",
-            _certify_control(expires_in=3)),
+            _certify_control(lambda w, _s: w.chain.advance(40), expires_in=30)),
 ]
